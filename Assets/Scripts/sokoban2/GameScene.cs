@@ -5,7 +5,6 @@ using RetroSokoban;
 public class GameScene : MonoBehaviour
 {
     public bool joystickInput = false;
-    //private RetroSokoban.Sokoban sokoban;
     private SokobanManager sokobanManager;
     public TitleCanvas titleCanvas;
     public Player player;

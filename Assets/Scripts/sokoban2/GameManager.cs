@@ -35,6 +35,8 @@ namespace RetroSokoban
                     // 시작화면UI
                     ProcessStart();
 
+                  
+
                     break;
                 case GameMode.Main:
                     ProcessMain();
@@ -79,22 +81,24 @@ namespace RetroSokoban
             //    // 시작화면 UI 비활성
             //    startUI.SetActive(false);
             //    // 메인모드 변경
-            //    _gameMode = GameMode.Main;
+            //    SetgameMode(GameMode.Main);
             //}
             //
 
-            // 스타트에서? 메인에서?
-            // 소코반 초기세팅    
-            sokobanManager?.InitializeSokoban();
+            // 스타트에서? 메인에서?            
+
+            SetgameMode(GameMode.Main);
+            Process();
         }
 
         // 메인 모드 프로세스
         private void ProcessMain()
         {
             // 인게임 실행
-
+            // 소코반 초기세팅
+            sokobanManager?.InitializeSokoban();
             // 소코반 실행
-            sokobanManager?.StartSokoban();
+            //sokobanManager?.StartSokoban();
 
             // 공지 UI활성(전체 반투명 배경으로 레이캐스트 끔), 배경 블러
             // 시작 버튼 클릭 시 공지 비활성, 배경정상
@@ -106,7 +110,7 @@ namespace RetroSokoban
 
             // 종료버튼 클릭 시
             // 앤드모드 변경
-            //    _gameMode = GameMode.End;
+            //SetgameMode(GameMode.End);
 
         }
         

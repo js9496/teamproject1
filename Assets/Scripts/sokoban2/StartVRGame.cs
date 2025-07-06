@@ -12,7 +12,8 @@ public class StartVRGame : MonoBehaviour
 
     private void Start()
     {
-        StartRetrokoban();
+        //StartRetrokoban();
+        gameManager.Process();
     }
 
     // 레트로코반 시작!!(VR 프로그램 시작)

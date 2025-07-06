@@ -19,10 +19,6 @@ namespace RetroSokoban
         //플레이어의 식별 값
         private const int Player = 4;
 
-
-        // IOManager
-        private IOManager iOManager;
-
         /// ====== 카메라 관련 ======
         // 카메라
         private Camera gameCamera;
@@ -72,8 +68,6 @@ namespace RetroSokoban
         {
             // subCamera 태그값 지정해서 찾아오기
             subCamera = GameObject.FindGameObjectWithTag("SubCamera");
-
-            iOManager = FindFirstObjectByType<IOManager>();
         }
 
         // 소코반 초기세팅
@@ -86,6 +80,9 @@ namespace RetroSokoban
             stages = LoadJsonDate();
             // 스테이지 데이터 할당
             SetStages(stages);
+
+            // 현재 스테이지를 구성(밑에 있는거 위로 올림)
+            Setupstage(currentStage - 1);
         }
 
         // 소코반 시작
@@ -286,7 +283,7 @@ namespace RetroSokoban
             FindPlayerPosition();
 
             //키 입력을 받아서 처리하는 내용
-            iOManager?.InputMoveKey(direction);
+            InputMoveKey(direction);
 
             // 골자리가 비어있으면 다시 그리기
             IsGoalEmpty();
@@ -294,6 +291,195 @@ namespace RetroSokoban
             //게임이 클리어 되었을 때 처리
             ClearGame();
         }
+
+        // 입력 키 조정
+        public void InputMoveKey(Direction direction)
+        {
+            //입력된 키값을 받아옴
+            //키 입력을 받아서 처리하는 내용
+            switch (direction)
+            {
+                // x-1 캐릭터의 왼쪽                
+                case Direction.Left:
+                    // 캐릭터의 왼쪽이 비어있거나 아이템을 놓을 수 있는 장소Goal 라면 이동처리
+                    if (currentBoard[playerPosition.Y, playerPosition.X - 1] == Empty ||
+                        currentBoard[playerPosition.Y, playerPosition.X - 1] == Goal)
+                    {
+                        // 배열의 값을 갱신하는 코드 임
+                        // 캐릭터를 이동
+                        currentBoard[playerPosition.Y, playerPosition.X - 1] = Player;
+
+                        //캐릭터가있던 자리에 비어있는 식별코드를 넣음
+                        currentBoard[playerPosition.Y, playerPosition.X] = Empty;
+
+                        // 플레이어의 위치를 이동시킴
+                        player.SetPosition(playerPosition.X - 1, (height - 1) - playerPosition.Y);
+                    }
+                    //캐릭터의 왼쪽에 박스가 있다면 처리
+                    else if (currentBoard[playerPosition.Y, playerPosition.X - 1] == Box)
+                    {
+                        //박스옆 -2 이 무엇인지 봐야함(캐릭터의 옆의 옆자리)
+                        if (currentBoard[playerPosition.Y, playerPosition.X - 2] == Empty ||
+                            currentBoard[playerPosition.Y, playerPosition.X - 2] == Goal)
+                        {
+                            // 캐릭터를 이동시킬 수 있다면 배열을 갱신
+                            // 캐릭터의 옆에 박스를 옮기고
+                            currentBoard[playerPosition.Y, playerPosition.X - 2] = Box;
+                            // 박스 자리에 캐릭터를 옮기고
+                            currentBoard[playerPosition.Y, playerPosition.X - 1] = Player;
+                            // 캐릭터 자리는 비어놓음
+                            currentBoard[playerPosition.Y, playerPosition.X] = Empty;
+
+                            // 커서의 위치를 이동하고 플레이어를 출력(2칸짜리)
+
+                            // Box 처리
+                            sprites[playerPosition.Y, playerPosition.X - 2] = sprites[playerPosition.Y, playerPosition.X - 1];
+                            sprites[playerPosition.Y, playerPosition.X - 2].transform.position = new Vector3(playerPosition.X - 2, (height - 1) - playerPosition.Y);
+                            sprites[playerPosition.Y, playerPosition.X - 1] = null;
+
+                            // 플레이어 위치 설정
+                            player.transform.position = new Vector3(playerPosition.X - 1, (height - 1) - playerPosition.Y);
+                        }
+                    }
+                    break;
+                case Direction.Right:
+                    // 캐릭터의 오른쪽이 비어있거나 아이템을 놓을 수 있는 장소Goal 라면 이동처리
+                    if (currentBoard[playerPosition.Y, playerPosition.X + 1] == Empty ||
+                        currentBoard[playerPosition.Y, playerPosition.X + 1] == Goal)
+                    {
+                        // 배열의 값을 갱신하는 코드 임
+                        // 캐릭터를 이동
+                        currentBoard[playerPosition.Y, playerPosition.X + 1] = Player;
+
+                        //캐릭터가있던 자리에 비어있는 식별코드를 넣음
+                        currentBoard[playerPosition.Y, playerPosition.X] = Empty;
+
+                        // 커서의 위치를 이동하고 플레이어를 출력
+                        // 플레이어의 위치를 이동시킴
+                        player.SetPosition(playerPosition.X + 1, (height - 1) - playerPosition.Y);
+
+                    }
+                    //캐릭터의 오른쪽에 박스가 있다면 처리
+                    else if (currentBoard[playerPosition.Y, playerPosition.X + 1] == Box)
+                    {
+                        //박스옆 -2 이 무엇인지 봐야함(캐릭터의 옆의 옆자리)
+                        if (currentBoard[playerPosition.Y, playerPosition.X + 2] == Empty ||
+                            currentBoard[playerPosition.Y, playerPosition.X + 2] == Goal)
+                        {
+                            // 캐릭터를 이동시킬 수 있다면 배열을 갱신
+                            // 캐릭터의 옆에 박스를 옮기고
+                            currentBoard[playerPosition.Y, playerPosition.X + 2] = Box;
+                            // 박스 자리에 캐릭터를 옮기고
+                            currentBoard[playerPosition.Y, playerPosition.X + 1] = Player;
+                            // 캐릭터 자리는 비어놓음
+                            currentBoard[playerPosition.Y, playerPosition.X] = Empty;
+
+                            // 커서의 위치를 이동하고 플레이어를 출력(2칸짜리)
+                            // Box 처리
+                            sprites[playerPosition.Y, playerPosition.X + 2] =
+                                 sprites[playerPosition.Y, playerPosition.X + 1];
+                            sprites[playerPosition.Y, playerPosition.X + 2].transform.position =
+                                 new Vector3(playerPosition.X + 2, (height - 1) - playerPosition.Y);
+
+                            sprites[playerPosition.Y, playerPosition.X + 1] = null;
+
+                            // 플레이어 위치 설정
+                            player.transform.position = new Vector3(playerPosition.X + 1, (height - 1) - playerPosition.Y);
+                        }
+                    }
+                    break;
+                case Direction.Up:
+                    // 캐릭터의 위쪽이 비어있거나 아이템을 놓을 수 있는 장소Goal 라면 이동처리
+                    if (currentBoard[playerPosition.Y - 1, playerPosition.X] == Empty ||
+                        currentBoard[playerPosition.Y - 1, playerPosition.X] == Goal)
+                    {
+                        // 배열의 값을 갱신하는 코드 임
+                        // 캐릭터를 이동
+                        currentBoard[playerPosition.Y - 1, playerPosition.X] = Player;
+
+                        //캐릭터가있던 자리에 비어있는 식별코드를 넣음
+                        currentBoard[playerPosition.Y, playerPosition.X] = Empty;
+
+                        // 플레이어의 위치를 이동시킴
+                        player.SetPosition(playerPosition.X, (height - 1) - playerPosition.Y + 1);
+
+                    }
+                    //캐릭터의 위쪽에 박스가 있다면 처리
+                    else if (currentBoard[playerPosition.Y - 1, playerPosition.X] == Box)
+                    {
+                        //박스옆 -2 이 무엇인지 봐야함(캐릭터의 위의 위자리)
+                        if (currentBoard[playerPosition.Y - 2, playerPosition.X] == Empty ||
+                            currentBoard[playerPosition.Y - 2, playerPosition.X] == Goal)
+                        {
+                            // 캐릭터를 이동시킬 수 있다면 배열을 갱신
+                            // 캐릭터의 위에 박스를 옮기고
+                            currentBoard[playerPosition.Y - 2, playerPosition.X] = Box;
+                            // 박스 자리에 캐릭터를 옮기고
+                            currentBoard[playerPosition.Y - 1, playerPosition.X] = Player;
+                            // 캐릭터 자리는 비어놓음
+                            currentBoard[playerPosition.Y, playerPosition.X] = Empty;
+
+                            // 커서의 위치를 이동하고 플레이어를 출력(2칸짜리)
+                            // Box 처리
+                            sprites[playerPosition.Y - 2, playerPosition.X] =
+                                 sprites[playerPosition.Y - 1, playerPosition.X];
+                            sprites[playerPosition.Y - 2, playerPosition.X].transform.position =
+                                 new Vector3(playerPosition.X, (height - 1) - playerPosition.Y + 2);
+
+                            sprites[playerPosition.Y - 1, playerPosition.X] = null;
+
+                            // 플레이어 위치 설정
+                            player.transform.position = new Vector3(playerPosition.X, (height - 1) - playerPosition.Y + 1);
+
+                        }
+                    }
+                    break;
+                case Direction.Down:
+                    // 캐릭터의 아래가 비어있거나 아이템을 놓을 수 있는 장소Goal 라면 이동처리
+                    if (currentBoard[playerPosition.Y + 1, playerPosition.X] == Empty ||
+                        currentBoard[playerPosition.Y + 1, playerPosition.X] == Goal)
+                    {
+                        // 배열의 값을 갱신하는 코드 임
+                        // 캐릭터를 이동
+                        currentBoard[playerPosition.Y + 1, playerPosition.X] = Player;
+
+                        //캐릭터가있던 자리에 비어있는 식별코드를 넣음
+                        currentBoard[playerPosition.Y, playerPosition.X] = Empty;
+
+                        // 플레이어의 위치를 이동시킴
+                        player.SetPosition(playerPosition.X, (height - 1) - playerPosition.Y - 1);
+
+                    }
+                    //캐릭터의 아래에 박스가 있다면 처리
+                    else if (currentBoard[playerPosition.Y + 1, playerPosition.X] == Box)
+                    {
+                        //박스옆 -2 이 무엇인지 봐야함(캐릭터의 아래의 아래자리)
+                        if (currentBoard[playerPosition.Y + 2, playerPosition.X] == Empty ||
+                            currentBoard[playerPosition.Y + 2, playerPosition.X] == Goal)
+                        {
+                            // 캐릭터를 이동시킬 수 있다면 배열을 갱신
+                            // 캐릭터의 아래에 박스를 옮기고
+                            currentBoard[playerPosition.Y + 2, playerPosition.X] = Box;
+                            // 박스 자리에 캐릭터를 옮기고
+                            currentBoard[playerPosition.Y + 1, playerPosition.X] = Player;
+                            // 캐릭터 자리는 비어놓음
+                            currentBoard[playerPosition.Y, playerPosition.X] = Empty;
+
+                            // 커서의 위치를 이동하고 플레이어를 출력(2칸짜리)
+                            // Box 처리
+                            sprites[playerPosition.Y + 2, playerPosition.X] = sprites[playerPosition.Y + 1, playerPosition.X];
+                            sprites[playerPosition.Y + 2, playerPosition.X].transform.position = new Vector3(playerPosition.X, (height - 1) - playerPosition.Y - 2);
+
+                            sprites[playerPosition.Y + 1, playerPosition.X] = null;
+
+                            // 플레이어 위치 설정
+                            player.transform.position = new Vector3(playerPosition.X, (height - 1) - playerPosition.Y - 1);
+                        }
+                    }
+                    break;
+            }
+        }
+
 
         /// <summary>
         /// 골 들어갔다 나오면 다시 그려주기

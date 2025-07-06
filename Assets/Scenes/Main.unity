@@ -1653,8 +1653,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1289419245}
-        m_TargetAssemblyTypeName: Sokoban.Sokoban, Assembly-CSharp
+      - m_Target: {fileID: 1289419247}
+        m_TargetAssemblyTypeName: RetroSokoban.SokobanManager, Assembly-CSharp
         m_MethodName: GameReset
         m_Mode: 1
         m_Arguments:
@@ -1768,7 +1768,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &877435958
 Transform:
   m_ObjectHideFlags: 0
@@ -2461,7 +2461,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1717954561962503726, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.132
+      value: -0.226
       objectReference: {fileID: 0}
     - target: {fileID: 1717954561962503726, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2781,7 +2781,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1890013573
 Transform:
   m_ObjectHideFlags: 0
@@ -3567,6 +3567,8 @@ SceneRoots:
   - {fileID: 330585546}
   - {fileID: 410087041}
   - {fileID: 832575519}
+  - {fileID: 1890013573}
+  - {fileID: 877435958}
   - {fileID: 1289419246}
   - {fileID: 1510770096}
   - {fileID: 366306735}
@@ -3577,5 +3579,3 @@ SceneRoots:
   - {fileID: 1934272623}
   - {fileID: 2137901167}
   - {fileID: 443770138}
-  - {fileID: 1890013573}
-  - {fileID: 877435958}
